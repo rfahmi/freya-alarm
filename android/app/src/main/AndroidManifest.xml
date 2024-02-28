@@ -1,6 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
       android:name=".MainApplication"
@@ -9,6 +15,29 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+      <meta-data android:name="com.dieam.reactnativepushnotification.notification_foreground" android:value="true" />
+      <meta-data android:name="com.dieam.reactnativepushnotification.notification_color" android:resource="@color/white" />
+      <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="@string/default_notification_channel_id" />
+      <meta-data android:name="com.dieam.reactnativepushnotification.default_notification_channel_id" android:value="@string/default_notification_channel_id" />
+      <meta-data android:name="com.dieam.reactnativepushnotification.default_notification_channel_name" android:value="@string/default_notification_channel_name" />
+      <meta-data android:name="com.dieam.reactnativepushnotification.default_notification_channel_description" android:value="@string/default_notification_channel_description" />
+      <receiver android:exported="false" android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions" />
+      <receiver android:exported="false" android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+      <receiver android:exported="false" android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+        <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED" />
+          <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+          <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        </intent-filter>
+      </receiver>
+
+      <service
+          android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+          android:exported="false" >
+          <intent-filter>
+              <action android:name="com.google.firebase.MESSAGING_EVENT" />
+          </intent-filter>
+      </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
