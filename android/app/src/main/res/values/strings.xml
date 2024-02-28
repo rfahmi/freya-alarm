@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">freyaalarm</string>
+    <string name="app_name">Freya Alarm</string>
     <string name="default_notification_channel_id">general</string>
     <string name="default_notification_channel_name">General</string>
     <string name="default_notification_channel_description">General Channel</string>
