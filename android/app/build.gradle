@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.freyaalarm"
+    namespace "com.rfahmi.freyaalarm"
     defaultConfig {
-        applicationId "com.freyaalarm"
+        applicationId "com.rfahmi.freyaalarm"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

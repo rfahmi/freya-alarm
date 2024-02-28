@@ -1,4 +1,4 @@
-package com.freyaalarm
+package com.rfahmi.freyaalarm
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

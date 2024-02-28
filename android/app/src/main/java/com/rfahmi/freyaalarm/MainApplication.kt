@@ -1,4 +1,4 @@
-package com.freyaalarm
+package com.rfahmi.freyaalarm
 
 import android.app.Application
 import com.facebook.react.PackageList
