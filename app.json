@@ -1,4 +1,8 @@
 {
   "name": "freyaalarm",
-  "displayName": "freyaalarm"
+  "displayName": "freyaalarm",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-4714881782641767~5931104019",
+    "ios_app_id": "ca-app-pub-4714881782641767~5931104019"
+  }
 }

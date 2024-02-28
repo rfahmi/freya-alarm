@@ -3,6 +3,7 @@ import {Platform} from 'react-native';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import PushNotification from 'react-native-push-notification';
 import Alarms from './src/screens/Alarms';
+import {AppOpenAd, MobileAds, TestIds} from 'react-native-google-mobile-ads';
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -80,7 +81,28 @@ PushNotification.channelExists('general', function (exists) {
   }
 });
 
+// MobileAds()
+//   .initialize()
+//   .then(adapterStatuses => {
+//     // Initialization complete!
+//     console.log('Initialization complete!', adapterStatuses);
+//   });
+// const adUnitId = __DEV__
+//   ? TestIds.APP_OPEN
+//   : 'ca-app-pub-4714881782641767/5440983579';
+
+
+
 const App = () => {
+  // const appOpenAd = AppOpenAd.createForAdRequest(adUnitId, {
+  //   keywords: ['fashion', 'clothing'],
+  // });
+  // // Preload an app open ad
+  // appOpenAd.load();
+  
+  // // Show the app open ad when user brings the app to the foreground.
+  // appOpenAd.show();
+
   const requestNotificationPermission = async () => {
     const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
     return result;
@@ -104,18 +126,7 @@ const App = () => {
     requestPermission();
   }, []);
 
-  return (
-    <>
-      {/* <Text>Hello</Text>
-      <Button
-        title="Press me"
-        onPress={() => {
-          setRepeatingNotification('30s');
-        }}
-      /> */}
-      <Alarms />
-    </>
-  );
+  return <Alarms />;
 };
 
 export default App;
