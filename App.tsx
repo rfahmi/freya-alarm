@@ -1,6 +1,8 @@
 import React, {useCallback, useEffect} from 'react';
-import {Alert, BackHandler, Button, Platform} from 'react-native';
+import {BackHandler, Platform} from 'react-native';
 import {
+  BannerAd,
+  BannerAdSize,
   MobileAds,
   TestIds,
   useInterstitialAd,
@@ -91,14 +93,20 @@ MobileAds()
     console.log('Initialization complete!', adapterStatuses);
   });
 
-const adUnitId = __DEV__
+const interstitialAdUnitId = __DEV__
   ? TestIds.INTERSTITIAL
   : 'ca-app-pub-4714881782641767/5440983579';
+const bannerAdUnitId = __DEV__
+  ? TestIds.BANNER
+  : 'ca-app-pub-4714881782641767~5931104019';
 
 const App = () => {
-  const {isLoaded, isClosed, load, show} = useInterstitialAd(adUnitId, {
-    requestNonPersonalizedAdsOnly: false,
-  });
+  const {isLoaded, isClosed, load, show} = useInterstitialAd(
+    interstitialAdUnitId,
+    {
+      requestNonPersonalizedAdsOnly: false,
+    },
+  );
   const showInterstitialAd = useCallback(() => {
     if (isLoaded) {
       return show();
@@ -150,22 +158,6 @@ const App = () => {
       'hardwareBackPress',
       () => {
         showInterstitialAd();
-        // Alert.alert(
-        //   'Discard Changes?',
-        //   'Are you sure you want to go back? Your changes will be discarded.',
-        //   [
-        //     {
-        //       text: 'Cancel',
-        //       onPress: () => null,
-        //       style: 'cancel',
-        //     },
-        //     {
-        //       text: 'Discard',
-        //       onPress: () => BackHandler.exitApp(), // Or perform your navigation action here
-        //     },
-        //   ],
-        //   {cancelable: false},
-        // );
         return true; // Prevent default back action
       },
     );
@@ -176,7 +168,10 @@ const App = () => {
   return (
     <>
       <Alarms />
-      {/* <Button title="Show App Open Ad" onPress={() => showInterstitialAd()} /> */}
+      <BannerAd
+        unitId={bannerAdUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+      />
     </>
   );
 };
