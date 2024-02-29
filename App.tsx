@@ -1,9 +1,13 @@
-import React, {useEffect} from 'react';
-import {Platform} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {Alert, BackHandler, Button, Platform} from 'react-native';
+import {
+  MobileAds,
+  TestIds,
+  useInterstitialAd,
+} from 'react-native-google-mobile-ads';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import PushNotification from 'react-native-push-notification';
 import Alarms from './src/screens/Alarms';
-import {AppOpenAd, MobileAds, TestIds} from 'react-native-google-mobile-ads';
 
 // Must be outside of any component LifeCycle (such as `componentDidMount`).
 PushNotification.configure({
@@ -81,27 +85,42 @@ PushNotification.channelExists('general', function (exists) {
   }
 });
 
-// MobileAds()
-//   .initialize()
-//   .then(adapterStatuses => {
-//     // Initialization complete!
-//     console.log('Initialization complete!', adapterStatuses);
-//   });
-// const adUnitId = __DEV__
-//   ? TestIds.APP_OPEN
-//   : 'ca-app-pub-4714881782641767/5440983579';
+MobileAds()
+  .initialize()
+  .then(adapterStatuses => {
+    console.log('Initialization complete!', adapterStatuses);
+  });
 
-
+const adUnitId = __DEV__
+  ? TestIds.INTERSTITIAL
+  : 'ca-app-pub-4714881782641767/5440983579';
 
 const App = () => {
-  // const appOpenAd = AppOpenAd.createForAdRequest(adUnitId, {
-  //   keywords: ['fashion', 'clothing'],
-  // });
-  // // Preload an app open ad
-  // appOpenAd.load();
-  
-  // // Show the app open ad when user brings the app to the foreground.
-  // appOpenAd.show();
+  const {isLoaded, isClosed, load, show} = useInterstitialAd(adUnitId, {
+    requestNonPersonalizedAdsOnly: false,
+  });
+  const showInterstitialAd = useCallback(() => {
+    if (isLoaded) {
+      return show();
+    } else {
+      console.error('Ad not loaded');
+    }
+  }, [isLoaded, show]);
+
+  useEffect(() => {
+    console.log('load ad', {isLoaded});
+    if (!isLoaded) {
+      load();
+    }
+  }, [load, isLoaded]);
+
+  useEffect(() => {
+    // Closed ad
+    if (isClosed) {
+      console.log('closed');
+      BackHandler.exitApp();
+    }
+  }, [isClosed]);
 
   const requestNotificationPermission = async () => {
     const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
@@ -126,7 +145,40 @@ const App = () => {
     requestPermission();
   }, []);
 
-  return <Alarms />;
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        showInterstitialAd();
+        // Alert.alert(
+        //   'Discard Changes?',
+        //   'Are you sure you want to go back? Your changes will be discarded.',
+        //   [
+        //     {
+        //       text: 'Cancel',
+        //       onPress: () => null,
+        //       style: 'cancel',
+        //     },
+        //     {
+        //       text: 'Discard',
+        //       onPress: () => BackHandler.exitApp(), // Or perform your navigation action here
+        //     },
+        //   ],
+        //   {cancelable: false},
+        // );
+        return true; // Prevent default back action
+      },
+    );
+
+    return () => backHandler.remove();
+  }, [load, showInterstitialAd]);
+
+  return (
+    <>
+      <Alarms />
+      {/* <Button title="Show App Open Ad" onPress={() => showInterstitialAd()} /> */}
+    </>
+  );
 };
 
 export default App;
